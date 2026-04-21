@@ -16,16 +16,16 @@ public final class ConsoleIO {
     // El mismo concepto —"entrada del usuario leída de consola"— se llama "v" aquí
     // y "r" en readInt(), dentro de la misma clase. Nombres distintos para el mismo
     // concepto hacen que el lector asuma incorrectamente que son ideas diferentes.
-    String v;
+    String value;
     do {
       out.print(prompt);
-      v = scanner.nextLine().trim();
-      if (v.isBlank()) {
+      value = scanner.nextLine().trim();
+      if (value.isBlank()) {
         // VIOLACIÓN Regla 10: texto hardcodeado directamente — debe ser una constante.
         out.println("  Value cannot be blank. Please try again.");
       }
-    } while (v.isBlank());
-    return v;
+    } while (value.isBlank());
+    return value;
   }
 
   public String readOptional(final String prompt) {
@@ -37,9 +37,9 @@ public final class ConsoleIO {
     while (true) {
       out.print(prompt);
       // VIOLACIÓN Regla 4: nombre abreviado "r" en lugar del nombre descriptivo "rawInput".
-      final String r = scanner.nextLine().trim();
+      final String result = scanner.nextLine().trim();
       try {
-        return Integer.parseInt(r);
+        return Integer.parseInt(result);
       } catch (final NumberFormatException ignored) {
         // VIOLACIÓN Regla 10: texto hardcodeado directamente — debe ser una constante.
         out.println("  Invalid input. Please enter a number.");
