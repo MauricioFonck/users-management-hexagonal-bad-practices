@@ -63,7 +63,7 @@ class UserPersistenceMapperTest {
   @DisplayName("fromModelToDto() maps all UserModel fields and sets null timestamps")
   void shouldMapModelToDto() {
     // Act
-    final UserPersistenceDto result = UserPersistenceMapper.fromModelToDto(userModel);
+    final UserPersistenceDto result = UserPersistenceMapper.INSTANCE.fromModelToDto(userModel);
 
     // Assert
     assertAll(
@@ -84,7 +84,7 @@ class UserPersistenceMapperTest {
   @DisplayName("fromEntityToModel() maps all UserEntity fields to a domain UserModel")
   void shouldMapEntityToModel() {
     // Act
-    final UserModel result = UserPersistenceMapper.fromEntityToModel(userEntity);
+    final UserModel result = UserPersistenceMapper.INSTANCE.fromEntityToModel(userEntity);
 
     // Assert
     assertAll(

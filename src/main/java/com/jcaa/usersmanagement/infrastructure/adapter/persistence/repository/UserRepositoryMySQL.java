@@ -87,7 +87,7 @@ public final class UserRepositoryMySQL
   public UserModel save(final UserModel user) {
     // Clean Code - Regla 10: comentarios redundantes que repiten lo que ya dice el código.
     // transformar el modelo de dominio a DTO de persistencia
-    final UserPersistenceDto dto = UserPersistenceMapper.fromModelToDto(user);
+    final UserPersistenceDto dto = UserPersistenceMapper.INSTANCE.fromModelToDto(user);
     // ejecutar la consulta de inserción en la base de datos
     executeSave(dto);
     // buscar y retornar el usuario recién guardado
@@ -122,7 +122,7 @@ public final class UserRepositoryMySQL
 
   @Override
   public UserModel update(final UserModel user) {
-    final UserPersistenceDto dto = UserPersistenceMapper.fromModelToDto(user);
+    final UserPersistenceDto dto = UserPersistenceMapper.INSTANCE.fromModelToDto(user);
     executeUpdate(dto);
     return findByIdOrFail(user.getId());
   }
