@@ -34,4 +34,16 @@ public class UserModel {
   public UserModel deactivate() {
     return new UserModel(id, name, email, password, role, UserStatus.INACTIVE);
   }
+
+  public boolean isActive() {
+    return status == UserStatus.ACTIVE;
+  }
+
+  public boolean isAdmin() {
+    return role == UserRole.ADMIN;
+  }
+
+  public boolean isStatusValidForAction() {
+    return status == UserStatus.ACTIVE || status == UserStatus.PENDING;
+  }
 }
