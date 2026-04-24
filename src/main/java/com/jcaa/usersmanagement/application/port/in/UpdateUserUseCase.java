@@ -6,5 +6,5 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public interface UpdateUserUseCase {
-  UserModel execute(@NotNull @Valid UpdateUserCommand command);
+  void execute(@NotNull @Valid UpdateUserCommand command);
 }

@@ -52,7 +52,10 @@ public final class UserController {
 
   public UserResponse updateUser(final UpdateUserRequest request) {
     final var command = UserDesktopMapper.INSTANCE.toUpdateCommand(request);
-    final var user = updateUserUseCase.execute(command);
+    updateUserUseCase.execute(command);
+    
+    final var query = UserDesktopMapper.INSTANCE.toGetByIdQuery(request.id());
+    final var user = getUserByIdUseCase.execute(query);
     return UserDesktopMapper.INSTANCE.toResponse(user);
   }
 
