@@ -85,12 +85,8 @@ public final class UserRepositoryMySQL
 
   @Override
   public UserModel save(final UserModel user) {
-    // Clean Code - Regla 10: comentarios redundantes que repiten lo que ya dice el código.
-    // transformar el modelo de dominio a DTO de persistencia
     final UserPersistenceDto dto = UserPersistenceMapper.INSTANCE.fromModelToDto(user);
-    // ejecutar la consulta de inserción en la base de datos
     executeSave(dto);
-    // buscar y retornar el usuario recién guardado
     return findByIdOrFail(user.getId());
   }
 
@@ -105,8 +101,6 @@ public final class UserRepositoryMySQL
       final String password,
       final String role,
       final String status) {
-    // Clean Code - Regla 10: comentario redundante — la línea siguiente ya es clara.
-    // verificar que todos los parámetros tengan valor
     if (Objects.isNull(id)
         || Objects.isNull(name)
         || Objects.isNull(email)
@@ -115,8 +109,6 @@ public final class UserRepositoryMySQL
         || Objects.isNull(status)) {
       throw new IllegalArgumentException("Todos los campos son obligatorios");
     }
-    // Clean Code - Regla 10: otro comentario redundante.
-    // construir y guardar el modelo
     throw new UnsupportedOperationException("Usar save(UserModel) en su lugar.");
   }
 
