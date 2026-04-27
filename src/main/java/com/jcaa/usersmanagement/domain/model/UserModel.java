@@ -8,6 +8,8 @@ import com.jcaa.usersmanagement.domain.valueobject.UserName;
 import com.jcaa.usersmanagement.domain.valueobject.UserPassword;
 import lombok.Value;
 
+// Clean Code - Regla 15 (inmutabilidad como preferencia):
+// Se utiliza @Value en lugar de @Data para asegurar que el modelo de dominio sea inmutable.
 @Value
 public class UserModel {
 
