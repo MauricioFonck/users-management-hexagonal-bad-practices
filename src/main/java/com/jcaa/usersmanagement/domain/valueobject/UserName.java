@@ -5,6 +5,8 @@ import com.jcaa.usersmanagement.domain.exception.InvalidUserNameException;
 
 public record UserName(String value) {
 
+  private static final int MIN_NAME_LENGTH = 3;
+
   public UserName {
     if (Objects.isNull(value)) {
       throw new NullPointerException("UserName cannot be null");
@@ -22,8 +24,8 @@ public record UserName(String value) {
   }
 
   private static void validateMinimumLength(final String normalizedValue) {
-    if (normalizedValue.length() < 3) {
-      throw InvalidUserNameException.becauseLengthIsTooShort(3);
+    if (normalizedValue.length() < MIN_NAME_LENGTH) {
+      throw InvalidUserNameException.becauseLengthIsTooShort(MIN_NAME_LENGTH);
     }
   }
 

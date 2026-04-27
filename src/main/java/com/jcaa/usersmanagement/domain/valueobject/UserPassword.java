@@ -7,6 +7,9 @@ import java.util.Objects;
 public final class UserPassword {
 
 
+  private static final int BCRYPT_COST = 12;
+  private static final int MIN_PASSWORD_LENGTH = 8;
+
   private final String value;
 
   private UserPassword(final String value) {
@@ -20,7 +23,7 @@ public final class UserPassword {
     final String normalizedValue = plainText.trim();
     validateNotEmpty(normalizedValue);
     validateMinimumLength(normalizedValue);
-    final String hash = BCrypt.withDefaults().hashToString(12, normalizedValue.toCharArray());
+    final String hash = BCrypt.withDefaults().hashToString(BCRYPT_COST, normalizedValue.toCharArray());
     return new UserPassword(hash);
   }
 
@@ -60,8 +63,8 @@ public final class UserPassword {
   }
 
   private static void validateMinimumLength(final String normalizedValue) {
-    if (normalizedValue.length() < 8) {
-      throw InvalidUserPasswordException.becauseLengthIsTooShort(8);
+    if (normalizedValue.length() < MIN_PASSWORD_LENGTH) {
+      throw InvalidUserPasswordException.becauseLengthIsTooShort(MIN_PASSWORD_LENGTH);
     }
   }
 
