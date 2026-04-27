@@ -11,6 +11,14 @@ public final class UserResponsePrinter {
   private static final String SEPARATOR = "-".repeat(52);
   private static final String ROW_FORMAT = "  %-10s : %s%n";
 
+  private static final java.util.Map<String, String> STATUS_LABELS = java.util.Map.of(
+      "ACTIVE", "Activo",
+      "INACTIVE", "Inactivo",
+      "PENDING", "Pendiente de activacion",
+      "BLOCKED", "Bloqueado",
+      "DELETED", "Eliminado"
+  );
+
   private final ConsoleIO console;
 
   public void print(final UserResponse response) {
@@ -59,18 +67,6 @@ public final class UserResponsePrinter {
   // encapsular el comportamiento. Aquí, un Map<String, String> de estados a etiquetas,
   // o un método getDisplayLabel() en el propio enum UserStatus, eliminaría toda la cascada.
   private static String getStatusLabel(final String status) {
-    if ("ACTIVE".equals(status)) {
-      return "Activo";
-    } else if ("INACTIVE".equals(status)) {
-      return "Inactivo";
-    } else if ("PENDING".equals(status)) {
-      return "Pendiente de activacion";
-    } else if ("BLOCKED".equals(status)) {
-      return "Bloqueado";
-    } else if ("DELETED".equals(status)) {
-      return "Eliminado";
-    } else {
-      return "Estado desconocido";
-    }
+    return STATUS_LABELS.getOrDefault(status, "Estado desconocido");
   }
 }
