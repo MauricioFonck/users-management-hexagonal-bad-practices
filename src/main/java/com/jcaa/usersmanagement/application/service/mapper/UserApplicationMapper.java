@@ -37,11 +37,17 @@ public interface UserApplicationMapper {
   UserModel fromUpdateCommandToModel(UpdateUserCommand command, UserPassword currentPassword);
 
   default UserId fromGetUserByIdQueryToUserId(GetUserByIdQuery query) {
-    return query != null ? new UserId(query.id()) : null;
+    if (query == null) {
+      throw new IllegalArgumentException("Query cannot be null");
+    }
+    return new UserId(query.id());
   }
 
   default UserId fromDeleteCommandToUserId(DeleteUserCommand command) {
-    return command != null ? new UserId(command.id()) : null;
+    if (command == null) {
+      throw new IllegalArgumentException("Command cannot be null");
+    }
+    return new UserId(command.id());
   }
 
   default UserId mapId(String value) { return value != null ? new UserId(value) : null; }
@@ -58,7 +64,6 @@ public interface UserApplicationMapper {
     return UserPassword.fromPlainText(newPassword);
   }
 
-  // Refactor: replaced roleToCode logic which was a violation of Rule 21.
-  // The logic is moved to an Optional or just handled as an enum mapping if needed.
-  // Actually, roleToCode was not used in any service, only in tests.
+  // Clean Code - Regla 21: No se usan códigos especiales de error como -1 o null.
+  // La lógica de roleToCode fue eliminada y reemplazada por mapeos seguros o excepciones.
 }
