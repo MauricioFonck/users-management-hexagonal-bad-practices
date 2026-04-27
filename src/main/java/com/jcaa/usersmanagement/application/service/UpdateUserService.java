@@ -42,7 +42,7 @@ public final class UpdateUserService implements UpdateUserUseCase {
     ensureEmailIsNotTakenByAnotherUser(newEmail, userId);
 
     final UserModel userToUpdate =
-        UserApplicationMapper.fromUpdateCommandToModel(command, current.getPassword());
+        UserApplicationMapper.INSTANCE.fromUpdateCommandToModel(command, current.getPassword());
     
     final UserModel updatedUser = updateUserPort.update(userToUpdate);
 

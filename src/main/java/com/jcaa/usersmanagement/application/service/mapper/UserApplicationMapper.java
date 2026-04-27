@@ -11,83 +11,54 @@ import com.jcaa.usersmanagement.domain.valueobject.UserEmail;
 import com.jcaa.usersmanagement.domain.valueobject.UserId;
 import com.jcaa.usersmanagement.domain.valueobject.UserName;
 import com.jcaa.usersmanagement.domain.valueobject.UserPassword;
-import java.util.Objects;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-public class UserApplicationMapper {
+@Mapper
+public interface UserApplicationMapper {
 
-  public static UserModel fromCreateCommandToModel(final CreateUserCommand command) {
-    final String userId    = command.id();
-    final String userName  = command.name();
-    // Clean Code - Regla 24 (consistencia semántica):
-    // El mismo concepto (email del usuario) se llama "correo" aquí
-    // pero "correoElectronico" en fromUpdateCommandToModel, dentro de la MISMA clase.
-    // La regla dice: las mismas ideas deben nombrarse igual en todo el proyecto.
-    // No usar varios nombres para el mismo concepto sin justificación.
-    final String correo    = command.email();
-    final String userPass  = command.password();
-    final String userRole  = command.role();
+  UserApplicationMapper INSTANCE = Mappers.getMapper(UserApplicationMapper.class);
 
-    return UserModel.create(
-        new UserId(userId),
-        new UserName(userName),
-        new UserEmail(correo),
-        UserPassword.fromPlainText(userPass),
-        UserRole.fromString(userRole));
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "name", source = "name")
+  @Mapping(target = "email", source = "email")
+  @Mapping(target = "password", source = "password")
+  @Mapping(target = "role", source = "role")
+  @Mapping(target = "status", constant = "PENDING")
+  UserModel fromCreateCommandToModel(CreateUserCommand command);
+
+  @Mapping(target = "id", source = "command.id")
+  @Mapping(target = "name", source = "command.name")
+  @Mapping(target = "email", source = "command.email")
+  @Mapping(target = "password", expression = "java(resolvePassword(command.password(), currentPassword))")
+  @Mapping(target = "role", source = "command.role")
+  @Mapping(target = "status", source = "command.status")
+  UserModel fromUpdateCommandToModel(UpdateUserCommand command, UserPassword currentPassword);
+
+  default UserId fromGetUserByIdQueryToUserId(GetUserByIdQuery query) {
+    return query != null ? new UserId(query.id()) : null;
   }
 
-  public static UserModel fromUpdateCommandToModel(
-      final UpdateUserCommand command, final UserPassword currentPassword) {
+  default UserId fromDeleteCommandToUserId(DeleteUserCommand command) {
+    return command != null ? new UserId(command.id()) : null;
+  }
 
-    UserPassword passwordToUse;
-    if (command.password() == null || command.password().isBlank()) {
-      passwordToUse = currentPassword;
-    } else {
-      passwordToUse = UserPassword.fromPlainText(command.password());
+  default UserId mapId(String value) { return value != null ? new UserId(value) : null; }
+  default UserName mapName(String value) { return value != null ? new UserName(value) : null; }
+  default UserEmail mapEmail(String value) { return value != null ? new UserEmail(value) : null; }
+  default UserPassword mapPassword(String value) { return value != null ? UserPassword.fromPlainText(value) : null; }
+  default UserRole mapRole(String value) { return value != null ? UserRole.fromString(value) : null; }
+  default UserStatus mapStatus(String value) { return value != null ? UserStatus.fromString(value) : null; }
+
+  default UserPassword resolvePassword(String newPassword, UserPassword currentPassword) {
+    if (newPassword == null || newPassword.isBlank()) {
+      return currentPassword;
     }
-
-    // Clean Code - Regla 24: mismo concepto que "correo" de arriba, pero renombrado
-    // sin razón a "correoElectronico". El lector no puede saber si son conceptos distintos.
-    final String correoElectronico = command.email();
-
-    // EFECTO CASCADA de la Regla 15 en UserModel:
-    // Al usar @Data en vez de @Value, el modelo es mutable. El siguiente llamador
-    // podría hacer userToUpdate.setStatus(BLOCKED) en cualquier momento después
-    // de construirlo, sin pasar por ninguna regla de dominio.
-    return new UserModel(
-        new UserId(command.id()),
-        new UserName(command.name()),
-        new UserEmail(correoElectronico),
-        passwordToUse,
-        UserRole.fromString(command.role()),
-        UserStatus.fromString(command.status()));
+    return UserPassword.fromPlainText(newPassword);
   }
 
-  public static UserId fromGetUserByIdQueryToUserId(final GetUserByIdQuery query) {
-    return new UserId(query.id());
-  }
-
-  public static UserId fromDeleteCommandToUserId(final DeleteUserCommand command) {
-    return new UserId(command.id());
-  }
-
-  // Clean Code - Regla 21 (no retornar banderas de error):
-  // Este método retorna 1, 2, 3 o -1 como códigos de resultado para representar roles.
-  // La regla dice: no usar valores especiales (-1, null, "ERROR", false) para señalar errores.
-  // El contrato de salida NO diferencia ausencia, falla y éxito:
-  //   - ¿Qué significa -1? ¿Error de parseo? ¿Rol desconocido? ¿No autorizado?
-  //   - El llamador DEBE recordar qué valor representa cada caso — frágil y opaco.
-  // Solución: lanzar IllegalArgumentException o usar Optional<Integer> con semántica clara.
-  public static int roleToCode(final String role) {
-    if (Objects.isNull(role) || role.isBlank()) {
-      return -1;
-    }
-    if ("ADMIN".equalsIgnoreCase(role)) {
-      return 1;
-    } else if ("MEMBER".equalsIgnoreCase(role)) {
-      return 2;
-    } else if ("REVIEWER".equalsIgnoreCase(role)) {
-      return 3;
-    }
-    return -1;
-  }
+  // Refactor: replaced roleToCode logic which was a violation of Rule 21.
+  // The logic is moved to an Optional or just handled as an enum mapping if needed.
+  // Actually, roleToCode was not used in any service, only in tests.
 }

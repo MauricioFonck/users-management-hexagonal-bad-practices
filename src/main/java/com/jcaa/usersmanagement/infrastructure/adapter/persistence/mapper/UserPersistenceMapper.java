@@ -23,12 +23,12 @@ public interface UserPersistenceMapper {
 
   UserPersistenceMapper INSTANCE = Mappers.getMapper(UserPersistenceMapper.class);
 
-  @Mapping(target = "id", source = "id.value")
-  @Mapping(target = "name", source = "name.value")
-  @Mapping(target = "email", source = "email.value")
-  @Mapping(target = "password", expression = "java(user.getPassword().value())")
-  @Mapping(target = "role", expression = "java(user.getRole().name())")
-  @Mapping(target = "status", expression = "java(user.getStatus().name())")
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "name", source = "name")
+  @Mapping(target = "email", source = "email")
+  @Mapping(target = "password", source = "password")
+  @Mapping(target = "role", source = "role")
+  @Mapping(target = "status", source = "status")
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   UserPersistenceDto fromModelToDto(UserModel user);
@@ -41,14 +41,23 @@ public interface UserPersistenceMapper {
   @Mapping(target = "status", source = "status")
   UserModel fromEntityToModel(UserEntity entity);
 
-  default UserId mapId(String value) { return value != null ? new UserId(value) : null; }
-  default UserName mapName(String value) { return value != null ? new UserName(value) : null; }
-  default UserEmail mapEmail(String value) { return value != null ? new UserEmail(value) : null; }
-  default UserPassword mapPassword(String value) { return value != null ? UserPassword.fromHash(value) : null; }
-  default UserRole mapRole(String value) { return value != null ? UserRole.fromString(value) : null; }
-  default UserStatus mapStatus(String value) { return value != null ? UserStatus.fromString(value) : null; }
+  // VO -> String
+  default String mapIdToString(UserId value) { return value != null ? value.value() : null; }
+  default String mapNameToString(UserName value) { return value != null ? value.value() : null; }
+  default String mapEmailToString(UserEmail value) { return value != null ? value.value() : null; }
+  default String mapPasswordToString(UserPassword value) { return value != null ? value.value() : null; }
+  default String mapRoleToString(UserRole value) { return value != null ? value.name() : null; }
+  default String mapStatusToString(UserStatus value) { return value != null ? value.name() : null; }
 
-  // ResultSet methods
+  // String -> VO
+  default UserId mapStringToId(String value) { return value != null ? new UserId(value) : null; }
+  default UserName mapStringToName(String value) { return value != null ? new UserName(value) : null; }
+  default UserEmail mapStringToEmail(String value) { return value != null ? new UserEmail(value) : null; }
+  default UserPassword mapStringToPassword(String value) { return value != null ? UserPassword.fromHash(value) : null; }
+  default UserRole mapStringToRole(String value) { return value != null ? UserRole.fromString(value) : null; }
+  default UserStatus mapStringToStatus(String value) { return value != null ? UserStatus.fromString(value) : null; }
+
+  // Technical ResultSet mapping
   static UserEntity fromResultSetToEntity(final ResultSet resultSet) throws SQLException {
     return new UserEntity(
         resultSet.getString("id"),

@@ -33,7 +33,7 @@ public final class CreateUserService implements CreateUserUseCase {
     final UserEmail email = new UserEmail(command.email());
     ensureEmailIsAvailable(email);
 
-    final UserModel userToSave = UserApplicationMapper.fromCreateCommandToModel(command);
+    final UserModel userToSave = UserApplicationMapper.INSTANCE.fromCreateCommandToModel(command);
     final UserModel savedUser = saveUserPort.save(userToSave);
 
     notifyWelcome(savedUser, command.password());

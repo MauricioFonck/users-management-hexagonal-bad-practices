@@ -24,7 +24,7 @@ public final class DeleteUserService implements DeleteUserUseCase {
   @Override
   public void execute(final DeleteUserCommand command) {
     validateCommand(command);
-    final UserId userId = UserApplicationMapper.fromDeleteCommandToUserId(command);
+    final UserId userId = UserApplicationMapper.INSTANCE.fromDeleteCommandToUserId(command);
     ensureUserExists(userId);
     deleteUserPort.delete(userId);
   }

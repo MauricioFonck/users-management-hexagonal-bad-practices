@@ -39,7 +39,7 @@ class UserApplicationMapperTest {
     final CreateUserCommand command = new CreateUserCommand(ID, NAME, EMAIL, PASSWORD, ROLE);
 
     // Act
-    final UserModel result = UserApplicationMapper.fromCreateCommandToModel(command);
+    final UserModel result = UserApplicationMapper.INSTANCE.fromCreateCommandToModel(command);
 
     // Assert
     assertAll(
@@ -65,7 +65,7 @@ class UserApplicationMapperTest {
 
     // Act
     final UserModel result =
-        UserApplicationMapper.fromUpdateCommandToModel(command, currentPassword);
+        UserApplicationMapper.INSTANCE.fromUpdateCommandToModel(command, currentPassword);
 
     // Assert
     assertAll(
@@ -91,7 +91,7 @@ class UserApplicationMapperTest {
 
     // Act
     final UserModel result =
-        UserApplicationMapper.fromUpdateCommandToModel(command, currentPassword);
+        UserApplicationMapper.INSTANCE.fromUpdateCommandToModel(command, currentPassword);
 
     // Assert
     assertSame(currentPassword, result.getPassword(),
@@ -110,7 +110,7 @@ class UserApplicationMapperTest {
 
     // Act
     final UserModel result =
-        UserApplicationMapper.fromUpdateCommandToModel(command, currentPassword);
+        UserApplicationMapper.INSTANCE.fromUpdateCommandToModel(command, currentPassword);
 
     // Assert
     assertSame(currentPassword, result.getPassword(),
@@ -126,7 +126,7 @@ class UserApplicationMapperTest {
     final GetUserByIdQuery query = new GetUserByIdQuery(ID);
 
     // Act
-    final UserId result = UserApplicationMapper.fromGetUserByIdQueryToUserId(query);
+    final UserId result = UserApplicationMapper.INSTANCE.fromGetUserByIdQueryToUserId(query);
 
     // Assert
     assertEquals(ID, result.value(), "id debe coincidir con el del query");
@@ -141,7 +141,7 @@ class UserApplicationMapperTest {
     final DeleteUserCommand command = new DeleteUserCommand(ID);
 
     // Act
-    final UserId result = UserApplicationMapper.fromDeleteCommandToUserId(command);
+    final UserId result = UserApplicationMapper.INSTANCE.fromDeleteCommandToUserId(command);
 
     // Assert
     assertEquals(ID, result.value(), "id debe coincidir con el del command");

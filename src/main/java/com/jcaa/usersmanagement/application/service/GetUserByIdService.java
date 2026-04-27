@@ -24,7 +24,7 @@ public final class GetUserByIdService implements GetUserByIdUseCase {
   public UserModel execute(final GetUserByIdQuery query) {
     validateQuery(query);
 
-    final UserId userId = UserApplicationMapper.fromGetUserByIdQueryToUserId(query);
+    final UserId userId = UserApplicationMapper.INSTANCE.fromGetUserByIdQueryToUserId(query);
     return getUserByIdPort
         .getById(userId)
         .orElseThrow(() -> UserNotFoundException.becauseIdWasNotFound(userId.value()));
