@@ -38,11 +38,11 @@ public interface UserDesktopMapper {
 
   LoginCommand toLoginCommand(LoginRequest request);
 
-  @Mapping(target = "id", source = "id.value")
-  @Mapping(target = "name", source = "name.value")
-  @Mapping(target = "email", source = "email.value")
-  @Mapping(target = "role", expression = "java(user.getRole().name())")
-  @Mapping(target = "status", expression = "java(user.getStatus().name())")
+  @Mapping(target = "id", source = "idValue")
+  @Mapping(target = "name", source = "nameValue")
+  @Mapping(target = "email", source = "emailValue")
+  @Mapping(target = "role", source = "roleName")
+  @Mapping(target = "status", source = "statusName")
   UserResponse toResponse(UserModel user);
 
   List<UserResponse> toResponseList(List<UserModel> users);

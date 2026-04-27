@@ -23,12 +23,12 @@ public interface UserPersistenceMapper {
 
   UserPersistenceMapper INSTANCE = Mappers.getMapper(UserPersistenceMapper.class);
 
-  @Mapping(target = "id", source = "id")
-  @Mapping(target = "name", source = "name")
-  @Mapping(target = "email", source = "email")
-  @Mapping(target = "password", source = "password")
-  @Mapping(target = "role", source = "role")
-  @Mapping(target = "status", source = "status")
+  @Mapping(target = "id", source = "idValue")
+  @Mapping(target = "name", source = "nameValue")
+  @Mapping(target = "email", source = "emailValue")
+  @Mapping(target = "password", source = "passwordValue")
+  @Mapping(target = "role", source = "roleName")
+  @Mapping(target = "status", source = "statusName")
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   UserPersistenceDto fromModelToDto(UserModel user);

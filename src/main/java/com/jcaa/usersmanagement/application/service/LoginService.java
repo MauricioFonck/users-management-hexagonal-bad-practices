@@ -39,7 +39,7 @@ public final class LoginService implements LoginUseCase {
   }
 
   private void validateCredentials(final UserModel user, final String plainPassword) {
-    if (!user.getPassword().verifyPlain(plainPassword)) {
+    if (!user.verifyPassword(plainPassword)) {
       throw InvalidCredentialsException.becauseCredentialsAreInvalid();
     }
   }

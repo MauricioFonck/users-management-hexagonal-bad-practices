@@ -46,4 +46,32 @@ public class UserModel {
   public boolean isStatusValidForAction() {
     return status == UserStatus.ACTIVE || status == UserStatus.PENDING;
   }
+
+  public boolean verifyPassword(final String plainPassword) {
+    return password.verifyPlain(plainPassword);
+  }
+
+  public String getIdValue() {
+    return id.value();
+  }
+
+  public String getNameValue() {
+    return name.value();
+  }
+
+  public String getEmailValue() {
+    return email.value();
+  }
+
+  public String getPasswordValue() {
+    return password.value();
+  }
+
+  public String getRoleName() {
+    return role.name();
+  }
+
+  public String getStatusName() {
+    return status.name();
+  }
 }
