@@ -10,6 +10,7 @@ import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.CreateUser
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.LoginRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UpdateUserRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
+import com.jcaa.usersmanagement.domain.valueobject.UserId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -25,15 +26,15 @@ public interface UserDesktopMapper {
 
   UpdateUserCommand toUpdateCommand(UpdateUserRequest request);
 
-  default DeleteUserCommand toDeleteCommand(String id) {
-    if (id == null || id.isBlank()) {
+  default DeleteUserCommand toDeleteCommand(UserId userId) {
+    if (userId == null) {
       throw new IllegalArgumentException("ID inválido");
     }
-    return new DeleteUserCommand(id);
+    return new DeleteUserCommand(userId.value());
   }
 
-  default GetUserByIdQuery toGetByIdQuery(String id) {
-    return new GetUserByIdQuery(id);
+  default GetUserByIdQuery toGetByIdQuery(UserId userId) {
+    return new GetUserByIdQuery(userId.value());
   }
 
   LoginCommand toLoginCommand(LoginRequest request);

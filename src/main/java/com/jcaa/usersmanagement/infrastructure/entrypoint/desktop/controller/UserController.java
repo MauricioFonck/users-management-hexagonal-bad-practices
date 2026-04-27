@@ -13,6 +13,7 @@ import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.LoginReque
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UpdateUserRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.mapper.UserDesktopMapper;
+import com.jcaa.usersmanagement.domain.valueobject.UserId;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -33,13 +34,8 @@ public final class UserController {
     return UserDesktopMapper.INSTANCE.toResponseList(usrs);
   }
 
-  public UserResponse findUserById(final String id) {
-    // Clean Code - Regla 20 (objeto antes que primitivo cuando el concepto lo merezca):
-    // El parámetro "id" es un String desnudo. El dominio tiene un tipo propio UserId
-    // que encapsula la validación (no vacío, no nulo, trimming).
-    // Al recibir String aquí, cualquier String pasa sin validación hasta llegar al value object.
-    // Recibir UserId directamente haría el contrato más expresivo y seguro.
-    final var query = UserDesktopMapper.INSTANCE.toGetByIdQuery(id);
+  public UserResponse findUserById(final UserId userId) {
+    final var query = UserDesktopMapper.INSTANCE.toGetByIdQuery(userId);
     final var user = getUserByIdUseCase.execute(query);
     return UserDesktopMapper.INSTANCE.toResponse(user);
   }
@@ -54,13 +50,13 @@ public final class UserController {
     final var command = UserDesktopMapper.INSTANCE.toUpdateCommand(request);
     updateUserUseCase.execute(command);
     
-    final var query = UserDesktopMapper.INSTANCE.toGetByIdQuery(request.id());
+    final var query = UserDesktopMapper.INSTANCE.toGetByIdQuery(new UserId(request.id()));
     final var user = getUserByIdUseCase.execute(query);
     return UserDesktopMapper.INSTANCE.toResponse(user);
   }
 
-  public void deleteUser(final String id) {
-    final var command = UserDesktopMapper.INSTANCE.toDeleteCommand(id);
+  public void deleteUser(final UserId userId) {
+    final var command = UserDesktopMapper.INSTANCE.toDeleteCommand(userId);
     deleteUserUseCase.execute(command);
   }
 
